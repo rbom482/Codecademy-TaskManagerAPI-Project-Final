@@ -59,24 +59,23 @@ const createTask = (req, res) => {
 // PATCH /task/:id - Update task
 const updateTask = (req, res) => {
   const id = parseInt(req.params.id);
-  const { text, completed } = req.body;
-  
- 
+  const { text, completed, date, priority } = req.body;
+
   const task = tasks.find(t => t.id === id);
-  
+
   if (!task) {
     return res.status(404).json({ error: "Task not found" });
   }
-  
 
-  if (text !== undefined) {
-    task.text = text;
+  if (text !== undefined) task.text = text;
+  if (completed !== undefined) task.completed = completed;
+  if (priority !== undefined) task.priority = priority;
+
+  // Important: convert to real Date
+  if (date !== undefined) {
+    task.date = new Date(date).toISOString();
   }
-  
-  if (completed !== undefined) {
-    task.completed = completed;
-  }
-  
+
   res.status(200).json(task);
 };
 
